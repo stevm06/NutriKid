@@ -126,7 +126,7 @@
                         <div class="col-6">
                             <div class="card btn-primary text-white" onclick="abrirEnlace('https://clinicasanfelipe.com/blog/loncheras-escolares-saludables')">
                                 <div class="card-body">
-                                    <h5 class="card-title">¿QUÉ SON LONCHERAS SALUDABLES?</h5>
+                                    <h3 class="card-title">¿QUÉ SON LONCHERAS SALUDABLES?</h3>
                                  
                                 </div>
                             </div>
@@ -134,7 +134,7 @@
                         <div class="col-6">
                             <div class="card btn-primary text-white" onclick="abrirEnlace('https://drive.google.com/file/d/121EErmo3-sWibf3kNE5gGaMeDnLycPiO/view')">
                                 <div class="card-body">
-                                    <h5 class="card-title">¿CUÁNTAS CALORÍAS DEBEN TENER?</h5>
+                                    <h3 class="card-title">¿CUÁNTAS CALORÍAS DEBEN TENER?</h3>
                                 </div>
                             </div>
                         </div>
@@ -149,20 +149,28 @@
             <!-- Nevera Virtual -->
             <aside class="col-lg-4 sidebar">
                 <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center bg-white">
-                        <h5 class="m-0">
-                            <i class="fas fa-refrigerator me-2 text-primary"></i>Escoge los Alimentos
-                        </h5>
-                        <button class="btn btn-sm btn-primary" onclick="mostrarModal()">
-                            <i class="fas fa-plus me-1"></i>Agregar
-                        </button>
-                    </div>
                     <div class="card-body">
-                        <div id="alimentos-disponibles" class="row g-2"></div>
-                        <p class="text-muted mt-3 small">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Total alimentos: <span id="contador-alimentos">0</span>
-                        </p>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-child me-1"></i>¿Cuál es la edad del niño o niña?
+                                </label>
+                                <select id="edad" class="form-select" onchange="actualizarRecomendaciones()">
+                                    <option value="2-3">2 a 3 años</option>
+                                    <option value="4-8">4 a 8 años</option>
+                                    <option value="9-13">9 a 13 años</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-bullseye me-1"></i>Objetivo diario
+                                </label>
+                                <div class="alert alert-light small m-0">
+                                    Calorías: <span id="meta-calorias">200</span> kcal
+                                    <br>Proteínas: <span id="meta-proteinas">10</span>g
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                  <!--
@@ -197,29 +205,22 @@
 
             <!-- Contenido Principal -->
             <main class="col-lg-8">
+               
                 <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                        <h5 class="m-0">
+                            <i class="fas fa-refrigerator me-2 text-primary"></i>Escoge los Alimentos
+                        </h5>
+                        <button class="btn btn-sm btn-primary" onclick="mostrarModal()">
+                            <i class="fas fa-plus me-1"></i>Agregar
+                        </button>
+                    </div>
                     <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">
-                                    <i class="fas fa-child me-1"></i>¿Cuál es la edad del niño o niña?
-                                </label>
-                                <select id="edad" class="form-select" onchange="actualizarRecomendaciones()">
-                                    <option value="2-3">2 a 3 años</option>
-                                    <option value="4-8">4 a 8 años</option>
-                                    <option value="9-13">9 a 13 años</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">
-                                    <i class="fas fa-bullseye me-1"></i>Objetivo diario
-                                </label>
-                                <div class="alert alert-light small m-0">
-                                    Calorías: <span id="meta-calorias">200</span> kcal
-                                    <br>Proteínas: <span id="meta-proteinas">10</span>g
-                                </div>
-                            </div>
-                        </div>
+                        <div id="alimentos-disponibles" class="row g-2"></div>
+                        <p class="text-muted mt-3 small">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Total alimentos: <span id="contador-alimentos">0</span>
+                        </p>
                     </div>
                 </div>
 
