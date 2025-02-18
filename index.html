@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriKids - Loncheras Saludables</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c8a5a;
+            --secondary-color: #f5a623;
+            --background-color: #f8f9fa;
+            --text-color: #2d3748;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .navbar {
+            background: var(--primary-color) !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .badge-nutricion {
+            font-size: 0.8rem;
+            padding: 0.4em 0.6em;
+        }
+
+        .food-card {
+            cursor: pointer;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 0.5rem 1.2rem;
+        }
+
+        .btn-primary:hover {
+            background-color: #23734a;
+        }
+
+        .food-card img {
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .card-body {
+            padding: 0.8rem;
+        }
+
+        .card-img-top {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+    
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-apple-alt me-3"></i>NutriKids
+            </a>
+            <div class="d-flex align-items-center">
+                <button class="btn btn-sm btn-light me-2" onclick="guardarProgreso()">
+                    <i class="fas fa-save"></i>
+                </button>
+                <button class="btn btn-sm btn-light me-2" onclick="imprimirLonchera()">
+                    <i class="fas fa-print"></i>
+                </button>
+
+                <button class="btn btn-sm btn-warning" onclick="masinformacion()">
+                    <i class="fas fa-question" style="color: white;"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Más Información</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card btn-primary text-white" onclick="abrirEnlace('https://clinicasanfelipe.com/blog/loncheras-escolares-saludables')">
+                                <div class="card-body">
+                                    <h5 class="card-title">¿QUÉ SON LONCHERAS SALUDABLES?</h5>
+                                 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card btn-primary text-white" onclick="abrirEnlace('https://drive.google.com/file/d/121EErmo3-sWibf3kNE5gGaMeDnLycPiO/view')">
+                                <div class="card-body">
+                                    <h5 class="card-title">¿CUÁNTAS CALORÍAS DEBEN TENER?</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <div class="row">
+            <!-- Nevera Virtual -->
+            <aside class="col-lg-4 sidebar">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                        <h5 class="m-0">
+                            <i class="fas fa-refrigerator me-2 text-primary"></i>Escoge los Alimentos
+                        </h5>
+                        <button class="btn btn-sm btn-primary" onclick="mostrarModal()">
+                            <i class="fas fa-plus me-1"></i>Agregar
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="alimentos-disponibles" class="row g-2"></div>
+                        <p class="text-muted mt-3 small">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Total alimentos: <span id="contador-alimentos">0</span>
+                        </p>
+                    </div>
+                </div>
+                 <!--
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="m-0">
+                            <i class="fas fa-chart-pie me-2 text-primary"></i>Estadísticas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label small">Categorías en nevera:</label>
+                            <div id="categorias-chart"></div>
+                        </div>
+                        <div class="mt-3">
+                            <label class="form-label small">Balance nutricional:</label>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-success" id="progreso-frutas"></div>
+                            </div>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-primary" id="progreso-proteinas"></div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-warning" id="progreso-cereales"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+               
+            </aside>
+
+            <!-- Contenido Principal -->
+            <main class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-child me-1"></i>¿Cuál es la edad del niño o niña?
+                                </label>
+                                <select id="edad" class="form-select" onchange="actualizarRecomendaciones()">
+                                    <option value="2-3">2 a 3 años</option>
+                                    <option value="4-8">4 a 8 años</option>
+                                    <option value="9-13">9 a 13 años</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-bullseye me-1"></i>Objetivo diario
+                                </label>
+                                <div class="alert alert-light small m-0">
+                                    Calorías: <span id="meta-calorias">200</span> kcal
+                                    <br>Proteínas: <span id="meta-proteinas">10</span>g
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="m-0">
+                            <i class="fas fa-lightbulb me-2 text-primary"></i>Has tus combinaciones
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2" id="lista-recomendaciones"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="m-0">
+                            <i class="fas fa-lunchbox me-2 text-primary"></i>Tu Lonchera
+                        </h5>
+                        <button class="btn btn-sm btn-danger" onclick="vaciarLonchera()">
+                            <i class="fas fa-trash me-1"></i>Vaciar
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="resumen-nutricional" class="mb-4"></div>
+                        <div class="row g-2" id="lonchera"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalNevera">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-search me-2"></i>Buscar alimentos
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Buscar por nombre o categoría..."
+                            id="buscarAlimento" onkeyup="filtrarAlimentos(this.value)">
+                    </div>
+                    <div class="row g-2" id="lista-alimentos-modal"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmacionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">¿Estás seguro?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmacionMensaje"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmarAccion">Sí, estoy seguro</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const alimentos = {
+            "2-3": [
+                {
+                    nombre: "Arepa pequeña",
+                    categoria: "Cereal",
+                    calorias: 150,
+                    proteinas: 3,
+                    imagen: "assets/img/arepa.jpeg" // https://www.example.com/arepa.jpg
+                },
+                {
+                    nombre: "Lulo pequeño",
+                    categoria: "Fruta",
+                    calorias: 40,
+                    proteinas: 0.8,
+                    imagen: "assets/img/lulo.jpg" // https://www.example.com/lulo.jpg
+                },
+                {
+                    nombre: "Mango biche",
+                    categoria: "Fruta",
+                    calorias: 60,
+                    proteinas: 0.5,
+                    imagen: "assets/img/mango-biche.jpeg" // https://www.example.com/mango-biche.jpg
+                },
+                {
+                    nombre: "Quesito antioqueño",
+                    categoria: "Lácteo",
+                    calorias: 80,
+                    proteinas: 5,
+                    imagen: "assets/img/quesito-antioqueño.jpg" // https://www.example.com/quesito.jpg
+                }
+            ],
+            "4-8": [
+                {
+                    nombre: "Huevo cocido",
+                    categoria: "Proteína",
+                    calorias: 85,
+                    proteinas: 6,
+                    imagen: "assets/img/huevo.jpeg" // https://www.example.com/huevo.jpg
+                },
+                {
+                    nombre: "Pandebono",
+                    categoria: "Cereal",
+                    calorias: 200,
+                    proteinas: 5,
+                    imagen: "assets/img/pandebono.jpg" // https://www.example.com/pandebono.jpg
+                },
+                {
+                    nombre: "Chontaduro",
+                    categoria: "Fruta",
+                    calorias: 120,
+                    proteinas: 2,
+                    imagen: "assets/img/chontaduro.jpg" // https://www.example.com/chontaduro.jpg
+                },
+                {
+                    nombre: "Bocadillo veleño",
+                    categoria: "Fruta",
+                    calorias: 100,
+                    proteinas: 0.5,
+                    imagen: "assets/img/bocadillo.jpg" // https://www.example.com/bocadillo.jpg
+                }
+            ],
+            "9-13": [
+                {
+                    nombre: "Empanada colombiana",
+                    categoria: "Proteína",
+                    calorias: 250,
+                    proteinas: 8,
+                    imagen: "assets/img/empanada.jpeg" // https://www.example.com/empanada.jpg
+                },
+                {
+                    nombre: "Guayaba entera",
+                    categoria: "Fruta",
+                    calorias: 60,
+                    proteinas: 1.2,
+                    imagen: "assets/img/guayaba.jpg" // https://www.example.com/guayaba.jpg
+                },
+                {
+                    nombre: "Patacón con hogao",
+                    categoria: "Vegetal",
+                    calorias: 180,
+                    proteinas: 2,
+                    imagen: "assets/img/patacon.jpg" // https://www.example.com/patacon.jpg
+                },
+                {
+                    nombre: "Leche entera Colanta",
+                    categoria: "Lácteo",
+                    calorias: 150,
+                    proteinas: 8,
+                    imagen: "assets/img/colanta.png" // https://www.example.com/colanta.jpg
+                }
+            ],
+            _comunes: [
+                {
+                    nombre: "Agua de panela",
+                    categoria: "Bebida",
+                    calorias: 80,
+                    proteinas: 0.2,
+                    imagen: "assets/img/aguapanela.jpg" // https://www.example.com/panela.jpg
+                },
+                {
+                    nombre: "Yogur Alpina",
+                    categoria: "Lácteo",
+                    calorias: 120,
+                    proteinas: 6,
+                    imagen: "assets/img/yogourt.png" // https://www.example.com/yogur-alpina.jpg
+                },
+                {
+                    nombre: "Jugo de maracuyá",
+                    categoria: "Bebida",
+                    calorias: 90,
+                    proteinas: 0.3,
+                    imagen: "assets/img/maracuya.jpg" // https://www.example.com/maracuya.jpg
+                },
+                {
+                    nombre: "Aguacate",
+                    categoria: "Fruta",
+                    calorias: 160,
+                    proteinas: 2,
+                    imagen: "assets/img/aguacate.jpg" // https://www.example.com/aguacate.jpg
+                }
+            ]
+        };
+        
+        // Variables globales
+        let nevera = [];
+        let lonchera = [];
+
+        // Funciones principales
+        function getAlimentosCompletos(edad) {
+            return [...alimentos[edad], ...alimentos._comunes];
+        }
+
+        function mostrarModal() {
+            const edad = document.getElementById('edad').value;
+            const alimentosCompletos = getAlimentosCompletos(edad);
+            // En la función mostrarModal:
+            const modalContent = alimentosCompletos.map(alimento => `
+    <div class="col-6 mb-2">
+        <div class="card food-card" onclick="agregarNevera('${alimento.nombre}')">
+            <img src="${alimento.imagen}" class="card-img-top" alt="${alimento.nombre}">
+            <div class="card-body">
+                <h6>${alimento.nombre}</h6>
+                <small class="text-muted">${alimento.categoria}</small>
+            </div>
+        </div>
+    </div>
+`).join('');
+            document.getElementById('lista-alimentos-modal').innerHTML = modalContent;
+            new bootstrap.Modal(document.getElementById('modalNevera')).show();
+        }
+
+        function agregarNevera(nombre) {
+            if (!nevera.includes(nombre)) {
+                nevera.push(nombre);
+                actualizarNevera();
+                actualizarRecomendaciones();
+            }
+        }
+
+        function actualizarNevera() {
+            const inventario = document.getElementById('alimentos-disponibles');
+            inventario.innerHTML = nevera.map(item => `
+        <div class="col-6 mb-2">
+            <div class="card food-card">
+                <div class="card-body p-2 d-flex justify-content-between">
+                    <span>${item}</span>
+                    <button class="btn btn-sm btn-danger" onclick="eliminarAlimento('${item}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+            actualizarEstadisticas();
+        }
+
+
+
+        function eliminarAlimento(nombre) {
+            // Verificar si es el último alimento
+            if (nevera.length === 1 && nevera[0] === nombre) {
+                mostrarConfirmacion(
+                    "¿Estás seguro de eliminar el último alimento de la nevera?",
+                    () => {
+                        nevera = nevera.filter(item => item !== nombre);
+                        actualizarNevera();
+                        actualizarRecomendaciones();
+                    }
+                );
+            } else {
+                nevera = nevera.filter(item => item !== nombre);
+                actualizarNevera();
+                actualizarRecomendaciones();
+            }
+        }
+
+        function actualizarRecomendaciones() {
+            const edad = document.getElementById('edad').value;
+            const recomendacionesDiv = document.getElementById('lista-recomendaciones');
+            const alimentosRecomendados = getAlimentosCompletos(edad).filter(alimento =>
+                nevera.includes(alimento.nombre)
+            );
+
+            // Actualizar metas nutricionales
+            const metas = {
+                "2-3": { calorias: 200, proteinas: 5 },
+                "4-8": { calorias: 280, proteinas: 8 },
+                "9-13": { calorias: 320, proteinas: 10 }
+            };
+            document.getElementById('meta-calorias').textContent = metas[edad].calorias;
+            document.getElementById('meta-proteinas').textContent = metas[edad].proteinas;
+
+            recomendacionesDiv.innerHTML = alimentosRecomendados.map(alimento => `
+        <div class="col-6 col-md-4 mb-2">
+            <div class="card food-card h-100" onclick="agregarLonchera('${alimento.nombre}', ${alimento.calorias}, ${alimento.proteinas})">
+                <div class="card-body">
+                    <h6>${alimento.nombre}</h6>
+                    <small class="text-muted">${alimento.categoria}</small>
+                    <div class="mt-2">
+                        <span class="badge bg-success">${alimento.calorias} kcal</span>
+                        <span class="badge bg-primary">${alimento.proteinas}g prot</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+            actualizarResumenNutricional();
+        }
+
+        function agregarLonchera(nombre, calorias, proteinas) {
+            lonchera.push({ nombre, calorias, proteinas });
+            actualizarLonchera();
+        }
+
+        function actualizarLonchera() {
+            const loncheraDiv = document.getElementById('lonchera');
+            loncheraDiv.innerHTML = lonchera.map((item, index) => `
+        <div class="col-12 mb-2">
+            <div class="card">
+                <div class="card-body p-2 d-flex justify-content-between">
+                    <div>
+                        <span>${item.nombre}</span>
+                        <small class="text-muted ms-2">${item.calorias} kcal</small>
+                    </div>
+                    <button class="btn btn-sm btn-danger" onclick="eliminarDeLonchera(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+            actualizarResumenNutricional();
+        }
+
+        function eliminarDeLonchera(index) {
+            lonchera.splice(index, 1);
+            actualizarLonchera();
+        }
+
+        function actualizarResumenNutricional() {
+            const total = lonchera.reduce((acc, item) => ({
+                calorias: acc.calorias + item.calorias,
+                proteinas: acc.proteinas + item.proteinas
+            }), { calorias: 0, proteinas: 0 });
+
+            const edad = document.getElementById('edad').value;
+            const metas = {
+                "2-3": { calorias: 200, proteinas: 5 },
+                "4-8": { calorias: 280, proteinas: 8 },
+                "9-13": { calorias: 320, proteinas: 10 }
+            };
+
+            const resumen = document.getElementById('resumen-nutricional');
+            resumen.innerHTML = `
+        <div class="alert ${total.calorias > metas[edad].calorias ? 'alert-danger' : 'alert-success'}">
+            Calorías: ${total.calorias}/${metas[edad].calorias} kcal
+        </div>
+        <div class="alert ${total.proteinas > metas[edad].proteinas ? 'alert-danger' : 'alert-info'}">
+            Proteínas: ${total.proteinas}/${metas[edad].proteinas}g
+        </div>
+    `;
+        }
+
+        function vaciarLonchera() {
+            // Verificar si hay elementos en la lonchera
+            if (lonchera.length > 0) {
+                mostrarConfirmacion(
+                    "¿Estás seguro de vaciar la lonchera?",
+                    () => {
+                        lonchera = [];
+                        actualizarLonchera();
+                    }
+                );
+            }
+        }
+
+        function mostrarConfirmacion(mensaje, accionConfirmada) {
+            // Mostrar el mensaje en el modal
+            document.getElementById('confirmacionMensaje').textContent = mensaje;
+
+            // Configurar el botón de confirmación
+            const confirmarBtn = document.getElementById('confirmarAccion');
+            confirmarBtn.onclick = () => {
+                accionConfirmada(); // Ejecutar la acción confirmada
+                bootstrap.Modal.getInstance(document.getElementById('confirmacionModal')).hide(); // Cerrar el modal
+            };
+
+            // Mostrar el modal
+            const confirmacionModal = new bootstrap.Modal(document.getElementById('confirmacionModal'));
+            confirmacionModal.show();
+        }
+
+        // Funciones adicionales
+        function actualizarEstadisticas() {
+            document.getElementById('contador-alimentos').textContent = nevera.length;
+        }
+
+        function guardarProgreso() {
+            localStorage.setItem('nutrikids-nevera', JSON.stringify(nevera));
+            localStorage.setItem('nutrikids-lonchera', JSON.stringify(lonchera));
+        }
+
+        function cargarProgreso() {
+            // Cargar la nevera desde localStorage (opcional, si quieres mantener los alimentos disponibles)
+            nevera = JSON.parse(localStorage.getItem('nutrikids-nevera')) || [];
+
+            // Inicializar la lonchera como un arreglo vacío (sin productos)
+            lonchera = [];
+
+            // Actualizar la interfaz
+            actualizarNevera();
+            actualizarLonchera(); // Esto asegura que la lonchera se muestre vacía
+            actualizarRecomendaciones();
+        }
+
+        function mostrarToast(mensaje, tipo = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${tipo} border-0`;
+            toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">${mensaje}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>`;
+            document.body.appendChild(toast);
+            new bootstrap.Toast(toast, { delay: 2000 }).show();
+        }
+
+
+        function masinformacion() {
+            var myModal = new bootstrap.Modal(document.getElementById('infoModal'));
+            myModal.show();
+        }
+
+        function abrirEnlace(url) {
+            window.open(url, '_blank');
+        }
+
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+    margin-top: 20px;
+}
+
+.btn {
+    font-size: 18px;
+    padding: 10px 20px;
+}
+
+footer {
+    background-color: #e9ecef;
+    padding: 10px 0;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.list-group-item {
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.list-group-item:hover {
+    background-color: #dcdcdc;
+}
+
+.opciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
