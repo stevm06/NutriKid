@@ -86,31 +86,37 @@
                 margin-bottom: 1.5rem;
             }
         }
-
-    
     </style>
 </head>
 
-<body>
+<script>
+    if (!localStorage.getItem("loggedUser")) {
+        window.location.href = "login.html"; // Redirigir si no hay sesión activa
+    }
+</script>
+
+<body onload="protectPage()">
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
+            <!-- Logo / Marca -->
             <a class="navbar-brand" href="#">
-                <i class="fas fa-apple-alt me-3"></i>NutriKids
+                <i class="fas fa-apple-alt me-2"></i>NutriKids
             </a>
-            <div class="d-flex align-items-center">
-                <button class="btn btn-sm btn-light me-2" onclick="guardarProgreso()">
-                    <i class="fas fa-save"></i>
-                </button>
-                <button class="btn btn-sm btn-light me-2" onclick="imprimirLonchera()">
-                    <i class="fas fa-print"></i>
+
+            <!-- Contenedor de botones -->
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-sm btn-warning" onclick="masinformacion()">
+                    <i class="fas fa-question text-white"></i>
                 </button>
 
-                <button class="btn btn-sm btn-warning" onclick="masinformacion()">
-                    <i class="fas fa-question" style="color: white;"></i>
+                <button class="btn btn-danger d-flex align-items-center gap-2 animate__animated animate__fadeIn"
+                    onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
                 </button>
             </div>
         </div>
     </nav>
+
 
 
 
@@ -124,17 +130,19 @@
                 <div class="modal-body text-center">
                     <div class="row">
                         <div class="col-6">
-                            <div class="card btn-primary text-white" onclick="abrirEnlace('https://clinicasanfelipe.com/blog/loncheras-escolares-saludables')">
+                            <div class="card btn-primary text-white"
+                                onclick="abrirEnlace('https://clinicasanfelipe.com/blog/loncheras-escolares-saludables')">
                                 <div class="card-body">
-                                    <h5 class="card-title">¿QUÉ SON LONCHERAS SALUDABLES?</h5>
-                                 
+                                    <h6 class="card-title">¿QUÉ SON LONCHERAS SALUDABLES?</h6>
+
                                 </div>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="card btn-primary text-white" onclick="abrirEnlace('https://drive.google.com/file/d/121EErmo3-sWibf3kNE5gGaMeDnLycPiO/view')">
+                            <div class="card btn-primary text-white"
+                                onclick="abrirEnlace('https://drive.google.com/file/d/121EErmo3-sWibf3kNE5gGaMeDnLycPiO/view')">
                                 <div class="card-body">
-                                    <h5 class="card-title">¿CUÁNTAS CALORÍAS DEBEN TENER?</h5>
+                                    <h6 class="card-title">¿CUÁNTAS CALORÍAS DEBEN TENER?</h6>
                                 </div>
                             </div>
                         </div>
@@ -149,23 +157,31 @@
             <!-- Nevera Virtual -->
             <aside class="col-lg-4 sidebar">
                 <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center bg-white">
-                        <h5 class="m-0">
-                            <i class="fas fa-refrigerator me-2 text-primary"></i>Escoge los Alimentos
-                        </h5>
-                        <button class="btn btn-sm btn-primary" onclick="mostrarModal()">
-                            <i class="fas fa-plus me-1"></i>Agregar
-                        </button>
-                    </div>
                     <div class="card-body">
-                        <div id="alimentos-disponibles" class="row g-2"></div>
-                        <p class="text-muted mt-3 small">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Total alimentos: <span id="contador-alimentos">0</span>
-                        </p>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-child me-1"></i>¿Cuál es la edad del niño o niña?
+                                </label>
+                                <select id="edad" class="form-select" onchange="actualizarRecomendaciones()">
+                                    <option value="2-3">2 a 3 años</option>
+                                    <option value="4-8">4 a 8 años</option>
+                                    <option value="9-13">9 a 13 años</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-bullseye me-1"></i>Objetivo diario
+                                </label>
+                                <div class="alert alert-light small m-0">
+                                    Calorías: <span id="meta-calorias">200</span> kcal
+                                    <br>Proteínas: <span id="meta-proteinas">10</span>g
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                 <!--
+                <!--
                 <div class="card">
                     <div class="card-header bg-white">
                         <h5 class="m-0">
@@ -192,34 +208,27 @@
                     </div>
                 </div> -->
 
-               
+
             </aside>
 
             <!-- Contenido Principal -->
             <main class="col-lg-8">
+
                 <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                        <h5 class="m-0">
+                            <i class="fas fa-refrigerator me-2 text-primary"></i>Escoge los Alimentos
+                        </h5>
+                        <button class="btn btn-sm btn-primary" onclick="mostrarModal()">
+                            <i class="fas fa-plus me-1"></i>Agregar
+                        </button>
+                    </div>
                     <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">
-                                    <i class="fas fa-child me-1"></i>¿Cuál es la edad del niño o niña?
-                                </label>
-                                <select id="edad" class="form-select" onchange="actualizarRecomendaciones()">
-                                    <option value="2-3">2 a 3 años</option>
-                                    <option value="4-8">4 a 8 años</option>
-                                    <option value="9-13">9 a 13 años</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">
-                                    <i class="fas fa-bullseye me-1"></i>Objetivo diario
-                                </label>
-                                <div class="alert alert-light small m-0">
-                                    Calorías: <span id="meta-calorias">200</span> kcal
-                                    <br>Proteínas: <span id="meta-proteinas">10</span>g
-                                </div>
-                            </div>
-                        </div>
+                        <div id="alimentos-disponibles" class="row g-2"></div>
+                        <p class="text-muted mt-3 small">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Total alimentos: <span id="contador-alimentos">0</span>
+                        </p>
                     </div>
                 </div>
 
@@ -297,128 +306,124 @@
 
     <script>
         const alimentos = {
-            "2-3": [
-                {
-                    nombre: "Arepa pequeña",
-                    categoria: "Cereal",
-                    calorias: 150,
-                    proteinas: 3,
-                    imagen: "assets/img/arepa.jpeg" // https://www.example.com/arepa.jpg
-                },
-                {
-                    nombre: "Lulo pequeño",
-                    categoria: "Fruta",
-                    calorias: 40,
-                    proteinas: 0.8,
-                    imagen: "assets/img/lulo.jpg" // https://www.example.com/lulo.jpg
-                },
-                {
-                    nombre: "Mango biche",
-                    categoria: "Fruta",
-                    calorias: 60,
-                    proteinas: 0.5,
-                    imagen: "assets/img/mango-biche.jpeg" // https://www.example.com/mango-biche.jpg
-                },
-                {
-                    nombre: "Quesito antioqueño",
-                    categoria: "Lácteo",
-                    calorias: 80,
-                    proteinas: 5,
-                    imagen: "assets/img/quesito-antioqueño.jpg" // https://www.example.com/quesito.jpg
-                }
+            "2-3": [{
+                nombre: "Arepa pequeña",
+                categoria: "Cereal",
+                calorias: 150,
+                proteinas: 3,
+                imagen: "assets/img/arepa.jpeg" // https://www.example.com/arepa.jpg
+            },
+            {
+                nombre: "Lulo pequeño",
+                categoria: "Fruta",
+                calorias: 40,
+                proteinas: 0.8,
+                imagen: "assets/img/lulo.jpg" // https://www.example.com/lulo.jpg
+            },
+            {
+                nombre: "Mango biche",
+                categoria: "Fruta",
+                calorias: 60,
+                proteinas: 0.5,
+                imagen: "assets/img/mango-biche.jpeg" // https://www.example.com/mango-biche.jpg
+            },
+            {
+                nombre: "Quesito antioqueño",
+                categoria: "Lácteo",
+                calorias: 80,
+                proteinas: 5,
+                imagen: "assets/img/quesito-antioqueño.jpg" // https://www.example.com/quesito.jpg
+            }
             ],
-            "4-8": [
-                {
-                    nombre: "Huevo cocido",
-                    categoria: "Proteína",
-                    calorias: 85,
-                    proteinas: 6,
-                    imagen: "assets/img/huevo.jpeg" // https://www.example.com/huevo.jpg
-                },
-                {
-                    nombre: "Pandebono",
-                    categoria: "Cereal",
-                    calorias: 200,
-                    proteinas: 5,
-                    imagen: "assets/img/pandebono.jpg" // https://www.example.com/pandebono.jpg
-                },
-                {
-                    nombre: "Chontaduro",
-                    categoria: "Fruta",
-                    calorias: 120,
-                    proteinas: 2,
-                    imagen: "assets/img/chontaduro.jpg" // https://www.example.com/chontaduro.jpg
-                },
-                {
-                    nombre: "Bocadillo veleño",
-                    categoria: "Fruta",
-                    calorias: 100,
-                    proteinas: 0.5,
-                    imagen: "assets/img/bocadillo.jpg" // https://www.example.com/bocadillo.jpg
-                }
+            "4-8": [{
+                nombre: "Huevo cocido",
+                categoria: "Proteína",
+                calorias: 85,
+                proteinas: 6,
+                imagen: "assets/img/huevo.jpeg" // https://www.example.com/huevo.jpg
+            },
+            {
+                nombre: "Pandebono",
+                categoria: "Cereal",
+                calorias: 200,
+                proteinas: 5,
+                imagen: "assets/img/pandebono.jpg" // https://www.example.com/pandebono.jpg
+            },
+            {
+                nombre: "Chontaduro",
+                categoria: "Fruta",
+                calorias: 120,
+                proteinas: 2,
+                imagen: "assets/img/chontaduro.jpg" // https://www.example.com/chontaduro.jpg
+            },
+            {
+                nombre: "Bocadillo veleño",
+                categoria: "Fruta",
+                calorias: 100,
+                proteinas: 0.5,
+                imagen: "assets/img/bocadillo.jpg" // https://www.example.com/bocadillo.jpg
+            }
             ],
-            "9-13": [
-                {
-                    nombre: "Empanada colombiana",
-                    categoria: "Proteína",
-                    calorias: 250,
-                    proteinas: 8,
-                    imagen: "assets/img/empanada.jpeg" // https://www.example.com/empanada.jpg
-                },
-                {
-                    nombre: "Guayaba entera",
-                    categoria: "Fruta",
-                    calorias: 60,
-                    proteinas: 1.2,
-                    imagen: "assets/img/guayaba.jpg" // https://www.example.com/guayaba.jpg
-                },
-                {
-                    nombre: "Patacón con hogao",
-                    categoria: "Vegetal",
-                    calorias: 180,
-                    proteinas: 2,
-                    imagen: "assets/img/patacon.jpg" // https://www.example.com/patacon.jpg
-                },
-                {
-                    nombre: "Leche entera Colanta",
-                    categoria: "Lácteo",
-                    calorias: 150,
-                    proteinas: 8,
-                    imagen: "assets/img/colanta.png" // https://www.example.com/colanta.jpg
-                }
+            "9-13": [{
+                nombre: "Empanada colombiana",
+                categoria: "Proteína",
+                calorias: 250,
+                proteinas: 8,
+                imagen: "assets/img/empanada.jpeg" // https://www.example.com/empanada.jpg
+            },
+            {
+                nombre: "Guayaba entera",
+                categoria: "Fruta",
+                calorias: 60,
+                proteinas: 1.2,
+                imagen: "assets/img/guayaba.jpg" // https://www.example.com/guayaba.jpg
+            },
+            {
+                nombre: "Patacón con hogao",
+                categoria: "Vegetal",
+                calorias: 180,
+                proteinas: 2,
+                imagen: "assets/img/patacon.jpg" // https://www.example.com/patacon.jpg
+            },
+            {
+                nombre: "Leche entera Colanta",
+                categoria: "Lácteo",
+                calorias: 150,
+                proteinas: 8,
+                imagen: "assets/img/colanta.png" // https://www.example.com/colanta.jpg
+            }
             ],
-            _comunes: [
-                {
-                    nombre: "Agua de panela",
-                    categoria: "Bebida",
-                    calorias: 80,
-                    proteinas: 0.2,
-                    imagen: "assets/img/aguapanela.jpg" // https://www.example.com/panela.jpg
-                },
-                {
-                    nombre: "Yogur Alpina",
-                    categoria: "Lácteo",
-                    calorias: 120,
-                    proteinas: 6,
-                    imagen: "assets/img/yogourt.png" // https://www.example.com/yogur-alpina.jpg
-                },
-                {
-                    nombre: "Jugo de maracuyá",
-                    categoria: "Bebida",
-                    calorias: 90,
-                    proteinas: 0.3,
-                    imagen: "assets/img/maracuya.jpg" // https://www.example.com/maracuya.jpg
-                },
-                {
-                    nombre: "Aguacate",
-                    categoria: "Fruta",
-                    calorias: 160,
-                    proteinas: 2,
-                    imagen: "assets/img/aguacate.jpg" // https://www.example.com/aguacate.jpg
-                }
+            _comunes: [{
+                nombre: "Agua de panela",
+                categoria: "Bebida",
+                calorias: 80,
+                proteinas: 0.2,
+                imagen: "assets/img/aguapanela.jpg" // https://www.example.com/panela.jpg
+            },
+            {
+                nombre: "Yogur Alpina",
+                categoria: "Lácteo",
+                calorias: 120,
+                proteinas: 6,
+                imagen: "assets/img/yogourt.png" // https://www.example.com/yogur-alpina.jpg
+            },
+            {
+                nombre: "Jugo de maracuyá",
+                categoria: "Bebida",
+                calorias: 90,
+                proteinas: 0.3,
+                imagen: "assets/img/maracuya.jpg" // https://www.example.com/maracuya.jpg
+            },
+            {
+                nombre: "Aguacate",
+                categoria: "Fruta",
+                calorias: 160,
+                proteinas: 2,
+                imagen: "assets/img/aguacate.jpg" // https://www.example.com/aguacate.jpg
+            }
             ]
         };
-        
+
         // Variables globales
         let nevera = [];
         let lonchera = [];
@@ -501,9 +506,18 @@
 
             // Actualizar metas nutricionales
             const metas = {
-                "2-3": { calorias: 200, proteinas: 5 },
-                "4-8": { calorias: 280, proteinas: 8 },
-                "9-13": { calorias: 320, proteinas: 10 }
+                "2-3": {
+                    calorias: 200,
+                    proteinas: 5
+                },
+                "4-8": {
+                    calorias: 280,
+                    proteinas: 8
+                },
+                "9-13": {
+                    calorias: 320,
+                    proteinas: 10
+                }
             };
             document.getElementById('meta-calorias').textContent = metas[edad].calorias;
             document.getElementById('meta-proteinas').textContent = metas[edad].proteinas;
@@ -527,7 +541,11 @@
         }
 
         function agregarLonchera(nombre, calorias, proteinas) {
-            lonchera.push({ nombre, calorias, proteinas });
+            lonchera.push({
+                nombre,
+                calorias,
+                proteinas
+            });
             actualizarLonchera();
         }
 
@@ -561,13 +579,25 @@
             const total = lonchera.reduce((acc, item) => ({
                 calorias: acc.calorias + item.calorias,
                 proteinas: acc.proteinas + item.proteinas
-            }), { calorias: 0, proteinas: 0 });
+            }), {
+                calorias: 0,
+                proteinas: 0
+            });
 
             const edad = document.getElementById('edad').value;
             const metas = {
-                "2-3": { calorias: 200, proteinas: 5 },
-                "4-8": { calorias: 280, proteinas: 8 },
-                "9-13": { calorias: 320, proteinas: 10 }
+                "2-3": {
+                    calorias: 200,
+                    proteinas: 5
+                },
+                "4-8": {
+                    calorias: 280,
+                    proteinas: 8
+                },
+                "9-13": {
+                    calorias: 320,
+                    proteinas: 10
+                }
             };
 
             const resumen = document.getElementById('resumen-nutricional');
@@ -642,7 +672,9 @@
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>`;
             document.body.appendChild(toast);
-            new bootstrap.Toast(toast, { delay: 2000 }).show();
+            new bootstrap.Toast(toast, {
+                delay: 2000
+            }).show();
         }
 
 
@@ -654,10 +686,8 @@
         function abrirEnlace(url) {
             window.open(url, '_blank');
         }
-
-
     </script>
-
+    <script src="assets/js/auth.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
