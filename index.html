@@ -219,18 +219,22 @@
 
 
                 <!-- Panel de recetas -->
-            <div class="card mb-4" >
-                <div class="card-header bg-white" >
-                    <h5 class="m-0">
-                        <i class="fas fa-book me-2 text-primary"></i>Recetas de los Alimentos
-                    </h5>
+                <div class="card mb-4">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="m-0">
+                            <i class="fas fa-book me-2 text-primary"></i>Recetas de los Alimentos
+                        </h5>
+                        <button class="btn btn-sm btn-danger" onclick="cerrarRecetas()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <ul id="lista-recetas" class="list-group small">
+                            <li class="list-group-item text-muted">Selecciona alimentos de TU LONCHERA para ver recetas</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <ul id="lista-recetas" class="list-group small">
-                        <li class="list-group-item text-muted">Selecciona alimentos de TU LONCHERA para ver recetas</li>
-                    </ul>
-                </div>
-            </div>
+                
 
 
             </aside>

@@ -244,30 +244,36 @@ function agregarLonchera(nombre, calorias, proteinas) {
 }
 
 function actualizarLonchera() {
-const loncheraDiv = document.getElementById('lonchera');
-loncheraDiv.innerHTML = lonchera.map((item, index) => `
-<div class="col-12 mb-2">
-    <div class="card">
-        <div class="card-body p-2 d-flex justify-content-between">
-            <div>
-                <span>${item.nombre}</span>
-                <small class="text-muted ms-2">${item.calorias} kcal</small>
-            </div>
-            <div>
-                <button class="btn btn-sm btn-info me-1" onclick="mostrarReceta('${item.nombre}')">
-                    RECETA
-                </button>
-                <button class="btn btn-sm btn-danger" onclick="eliminarDeLonchera(${index})">
-                    <i class="fas fa-times"></i>
-                </button>
+    const loncheraDiv = document.getElementById('lonchera');
+    loncheraDiv.innerHTML = lonchera.map((item, index) => `
+        <div class="col-12 mb-2">
+            <div class="card">
+                <div class="card-body p-2 d-flex justify-content-between">
+                    <div>
+                        <span>${item.nombre}</span>
+                        <small class="text-muted ms-2">${item.calorias} kcal</small>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-info me-1" onclick="mostrarReceta('${item.nombre}')">
+                            RECETA
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminarDeLonchera(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-`).join('');
+    `).join('');
 
-actualizarResumenNutricional();
+    actualizarResumenNutricional();
+
+    // Si la lonchera está vacía, resetear el panel de recetas
+    if (lonchera.length === 0) {
+        cerrarRecetas();
+    }
 }
+
 
 
 // Función para actualizar el panel con la receta seleccionada
@@ -379,6 +385,14 @@ listaRecetas.innerHTML = `
 }
 }
 
+function cerrarRecetas() {
+    const listaRecetas = document.getElementById('lista-recetas');
+    listaRecetas.innerHTML = `
+        <li class="list-group-item text-muted">Selecciona alimentos de TU LONCHERA para ver recetas</li>
+    `;
+}
+
+
 
 function eliminarDeLonchera(index) {
     lonchera.splice(index, 1);
@@ -429,6 +443,7 @@ function vaciarLonchera() {
             () => {
                 lonchera = [];
                 actualizarLonchera();
+                cerrarRecetas();
             }
         );
     }
